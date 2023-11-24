@@ -98,10 +98,12 @@ fun CupcakeApp(
         {
             composable(route = CupcakeScreen.Start.name){
                 StartOrderScreen(quantityOptions = DataSource.quantityOptions,
+
                     onNextButtonClicked = {
                     viewModel.setQuantity(it)
                     navController.navigate(CupcakeScreen.Flavor.name)
-                }
+                },
+
 
                     )
             }
@@ -113,19 +115,20 @@ fun CupcakeApp(
                         viewModel.setFlavor(it)
                         navController.navigate(CupcakeScreen.PickUp.name)
                     },
-                    onCancelButtonClicked = {}
+                    onCancelButtonClicked = { cancelOrderAndNavStart(viewModel,navController) }
                 )
 
             }
             composable(route= CupcakeScreen.PickUp.name){
                    SelectOptionScreen(subtotal = uiState.price, options =uiState.pickupOptions,
                        onSelectionChanged = {viewModel.setDate(it)
-                           navController.navigate(CupcakeScreen.Summary.name)} )
+                           navController.navigate(CupcakeScreen.Summary.name)},onCancelButtonClicked = { cancelOrderAndNavStart(viewModel,navController) } )
             }
             composable(route=CupcakeScreen.Summary.name){
-                OrderSummaryScreen(orderUiState = uiState, onCancelButtonClicked = {},
+                OrderSummaryScreen(orderUiState = uiState, onCancelButtonClicked = { cancelOrderAndNavStart(viewModel,navController) },
                     onSendButtonClicked = {subject:String, summary:String->},
                     modifier =Modifier.fillMaxHeight())
+
             }
         }
     }
