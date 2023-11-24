@@ -15,7 +15,6 @@
  */
 package com.example.cupcake.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cupcake.R
 import com.example.cupcake.data.DataSource
+
 
 /**
  * Composable that allows the user to select the desired cupcake quantity and expects
@@ -83,38 +83,48 @@ fun StartOrderScreen(
             ) {
                 quantityOptions.forEach { item ->
                     SelectQuantityButton(
-                        labelResourceId = item.first,
-                        onClick = {}
-                    )
+                        labelResourseId = item.first
+                    ) {}
                 }
             }
         }
     }
 }
 
-/**
- * Customizable button composable that displays the [labelResourceId]
- * and triggers [onClick] lambda when this composable is clicked
- */
+
+@Composable
+fun StartOrderScreen(
+    quantityOptions: List<Pair<Int,Int>>,
+    onNextButtonClicked: (Int)->Unit,
+    modifier : Modifier = Modifier
+) {
+    quantityOptions.forEach { item->
+        SelectQuantityButton(labelResourseId = item.first) { onNextButtonClicked(item.second) }
+    }
+}
+
+
 @Composable
 fun SelectQuantityButton(
-    @StringRes labelResourceId: Int,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    labelResourseId: Int,
+    onClick: () -> Unit
+
 ){
     Button(
         onClick = onClick,
         modifier = modifier.widthIn(min = 250.dp)
     ) {
-        Text(stringResource(labelResourceId))
+        Text(stringResource(labelResourseId))
     }
 }
 
 @Preview
 @Composable
 fun StartOrderPreview(){
-    StartOrderScreen(
-        quantityOptions = DataSource.quantityOptions,
-        modifier = Modifier.fillMaxSize().padding(dimensionResource(R.dimen.padding_medium))
-    )
+    StartOrderScreen(quantityOptions = DataSource.quantityOptions, onNextButtonClicked = {}, modifier = Modifier
+        .fillMaxSize()
+        .padding(
+            dimensionResource(R.dimen.padding_medium)
+        ))
 }
